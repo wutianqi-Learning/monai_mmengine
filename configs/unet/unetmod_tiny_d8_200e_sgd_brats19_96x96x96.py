@@ -10,7 +10,7 @@ from seg.models.monai_datapreprocessor import MonaiBratsPreProcessor
 
 with read_base():
     from .._base_.datasets.brats19 import *  # noqa
-    from .._base_.schedules.schedule_100e_sgd import *  # noqa
+    from .._base_.schedules.schedule_200e_sgd import *  # noqa
     from .._base_.monai_runtime import *  # noqa
 
 # model settings
@@ -47,11 +47,11 @@ vis_backends = [
     dict(
         type=WandbVisBackend,
         init_kwargs=dict(
-            project='brats19', name='unet-tiny-sgd-100e'),
+            project='brats19', name='unet-tiny-sgd-200e'),
         define_metric_cfg=dict(Dice='max'))
 ]
 visualizer = dict(type=SegLocalVisualizer,
                   vis_backends=vis_backends,
                   name='visualizer')
 
-work_dir = '../working_brats19/SGD_100epochs/unet_num_res_2/resuent--monai-DiceCELoss'
+work_dir = '../working_brats19/SGD_200epochs/unet_num_res_2/resuent-monai-DiceCELoss'

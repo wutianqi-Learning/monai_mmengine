@@ -12,7 +12,7 @@ train_cfg = dict(type=EpochBasedTrainLoop, max_epochs=200, val_interval=4)
 val_cfg = dict(type=MonaiValLoop)
 test_cfg = dict(type=MonaiTestLoop)
 # optimizer
-optimizer = dict(type=SGD, lr=0.01, momentum=0.9, weight_decay=0.0001)
+optimizer = dict(type=SGD, lr=0.01, momentum=0.9, weight_decay=0.0002)
 # optimizer = dict(type=SGD, lr=0.01, momentum=0.99, weight_decay=3e-5, nesterov=True)
 optim_wrapper = dict(type=OptimWrapper, optimizer=optimizer, clip_grad=None)
 # learning policy
