@@ -1,13 +1,12 @@
 from mmengine.config import read_base
-from monai.losses.dice import DiceCELoss, DiceLoss, DiceFocalLoss
+from monai.losses.dice import DiceCELoss, DiceLoss, DiceFocalLoss, FocalLoss
 from monai.networks.nets import VNet
 from seg.models.segmentors.monai_model import MonaiSeg
-from monai.losses.focal_loss import FocalLoss
+from seg.models.losses.my_monai_dice import MyDiceCELoss
 from seg.models.segmentors.monai_dual_model import MonaiDualSeg, MSELoss
 from seg.models.decode_heads.dual_branch import DualBranchRes, DualBranchTanh
 from seg.engine.hooks.set_epoch_hook import SetEpochInfoHook
 from seg.models.monai_datapreprocessor import MonaiBratsPreProcessor
-
 with read_base():
     from .._base_.datasets.brats19 import *  # noqa
     from .._base_.schedules.schedule_200e_sgd import *  # noqa
@@ -29,7 +28,7 @@ model = dict(
         # out_channels=1
     ),
     loss_functions=[
-        dict(type=DiceCELoss, to_onehot_y=False, sigmoid=True, squared_pred=True, include_background=True),
+        dict(type=MyDiceCELoss, to_onehot_y=False, sigmoid=True, squared_pred=True, include_background=True),
         dict(type=DiceLoss, to_onehot_y=False, sigmoid=False, squared_pred=True, include_background=True),
         dict(type=MSELoss, steady_point=100)
         ],
@@ -60,4 +59,4 @@ visualizer = dict(type=SegLocalVisualizer,
                   vis_backends=vis_backends,
                   name='visualizer')
 
-work_dir = '../working_brats19/SGD_200epochs/vnet/vnet-daul_branch-monai-DiceCELoss-MSE'
+work_dir = '../working_brats19/SGD_200epochs/vnet/vnet-daul_branch-monai-MyDiceCELoss-MSE'
