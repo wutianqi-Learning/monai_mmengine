@@ -184,11 +184,12 @@ class MyDiceCELoss(_Loss):
                 f"got shape {input.shape} and {target.shape}."
             )
         ce_loss = self.ce(input, target) if input.shape[1] != 1 else self.bce(input, target)
-        weight_entropy = torch.exp(torch.tanh(ce_loss))
-        dice_loss = self.dice(input, target, weight_entropy)
         if current_epoch < 150:
+            dice_loss = self.dice(input, target, 1)
             total_loss: torch.Tensor = self.lambda_dice * dice_loss + self.lambda_ce * ce_loss
         else:
+            weight_entropy = torch.exp(torch.tanh(ce_loss))
+            dice_loss = self.dice(input, target, weight_entropy)
             focal_loss = self.focal(input, target)
             total_loss: torch.Tensor = self.lambda_dice * dice_loss + self.lambda_ce * focal_loss
 
@@ -283,7 +284,7 @@ class DiceLoss(_Loss):
         self.register_buffer("class_weight", torch.ones(1))
         
 
-    def forward(self, input: torch.Tensor, target: torch.Tensor, weight: torch.Tensor) -> torch.Tensor:
+    def forward(self, input: torch.Tensor, target: torch.Tensor, weight) -> torch.Tensor:
         """
         Args:
             input: the shape should be BNH[WD], where N is the number of classes.

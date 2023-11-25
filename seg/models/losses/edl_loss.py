@@ -9,9 +9,6 @@ from torch.nn.modules.loss import _Loss
 import torch
 import torch.nn.functional as F
 
-from ..registry import LOSSES
-from .base import BaseWeightedLoss
-
 def relu_evidence(y):
     return F.relu(y)
 
@@ -21,7 +18,6 @@ def exp_evidence(y):
 def softplus_evidence(y):
     return F.softplus(y)
 
-@LOSSES.register_module()
 class EvidenceLoss(_Loss):
     """Evidential MSE Loss."""
     def __init__(self, num_classes, 
