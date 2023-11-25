@@ -59,4 +59,4 @@ visualizer = dict(type=SegLocalVisualizer,
                   vis_backends=vis_backends,
                   name='visualizer')
 
-work_dir = '../working_brats19/SGD_200epochs/vnet/vnet-daul_branch-monai-MyDiceCELoss-MSE'
+work_dir = '../working_brats19/SGD_200epochs/vnet/vnet-daul_branch-monai-MyDiceCEFocalLoss-MSE'

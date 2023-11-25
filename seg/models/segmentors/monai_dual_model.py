@@ -22,7 +22,7 @@ from monai.inferers import sliding_window_inference
 from monai.losses import DeepSupervisionLoss
 
 from ..monai_datapreprocessor import MonaiDataPreProcessor
-from ..losses import MSELoss
+from ..losses import MSELoss, MyDiceCELoss
 from monai.losses.dice import DiceLoss
 
 class InitWeights_He(object):
@@ -212,6 +212,9 @@ class MonaiDualSeg(BaseModel):
                 elif isinstance(loss_functions, MSELoss):
                     loss[loss_name] = loss_weight * loss_functions(
                         logits, dis_mask, self.epoch)
+                elif isinstance(loss_functions, MyDiceCELoss):
+                    loss[loss_name] = loss_weight * loss_functions(
+                            logits, label, self.epoch)
                 else:
                     loss[loss_name] = loss_weight * loss_functions(
                     logits, label)
