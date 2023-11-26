@@ -184,14 +184,11 @@ class MyDiceCELoss(_Loss):
                 f"got shape {input.shape} and {target.shape}."
             )
         ce_loss = self.ce(input, target) if input.shape[1] != 1 else self.bce(input, target)
-        if current_epoch < 150:
-            dice_loss = self.dice(input, target, 1)
-            total_loss: torch.Tensor = self.lambda_dice * dice_loss + self.lambda_ce * ce_loss
-        else:
-            weight_entropy = torch.exp(torch.tanh(ce_loss))
-            dice_loss = self.dice(input, target, weight_entropy)
-            focal_loss = self.focal(input, target)
-            total_loss: torch.Tensor = self.lambda_dice * dice_loss + self.lambda_ce * focal_loss
+    
+        weight_entropy = torch.exp(torch.tanh(ce_loss))
+        dice_loss = self.dice(input, target, weight_entropy)
+        # focal_loss = self.focal(input, target)
+        total_loss: torch.Tensor = self.lambda_dice * dice_loss + self.lambda_ce * ce_loss
 
         return total_loss
     
