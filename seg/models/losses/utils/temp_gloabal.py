@@ -11,25 +11,25 @@ from monai.networks.blocks.convolutions import Convolution
 
 
 
-class Global_T(nn.Module):
-    def __init__(self):
-        super(Global_T, self).__init__()
-        self.mlp = InstanceTemperature()
-        # self.global_T = nn.Parameter(mlp)
-        self.grl = GradientReversal()
-
-    def forward(self, fake_input1, fake_input2, lambda_):
-        return self.grl(self.mlp(fake_input1,fake_input2), lambda_)
-
 # class Global_T(nn.Module):
 #     def __init__(self):
 #         super(Global_T, self).__init__()
-        
-#         self.global_T = nn.Parameter(torch.ones(1), requires_grad=True)
+#         self.mlp = InstanceTemperature()
+#         # self.global_T = nn.Parameter(mlp)
 #         self.grl = GradientReversal()
 
 #     def forward(self, fake_input1, fake_input2, lambda_):
-#         return self.grl(self.global_T, lambda_)
+#         return self.grl(self.mlp(fake_input1,fake_input2), lambda_)
+
+class Global_T(nn.Module):
+    def __init__(self):
+        super(Global_T, self).__init__()
+        
+        self.global_T = nn.Parameter(torch.ones(1), requires_grad=True)
+        self.grl = GradientReversal()
+
+    def forward(self, fake_input1, fake_input2, lambda_):
+        return self.grl(self.global_T, lambda_)
     
 class InstanceTemperature(nn.Module):
     def __init__(self, input_dim=2, output_dim=1):

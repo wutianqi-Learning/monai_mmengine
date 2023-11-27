@@ -32,6 +32,7 @@ model = dict(
         dict(type=DiceLoss, to_onehot_y=False, sigmoid=False, squared_pred=True, include_background=True),
         # dict(type=MSELoss, steady_point=100)
         dict(type=AdvMSELoss,
+             loss_weight2=0.5,
              steady_point=100,
              first_point=100,
              second_point=115,
