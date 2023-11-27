@@ -5,9 +5,10 @@ roi = [96,96,96]
 
 dataloader_cfg = dict(
     data_name='BraTS19',
-    data_path='/home/jz207/workspace/wutq/UG-MCL/data/BraTS2019',
+    # data_path='/home/jz207/workspace/wutq/UG-MCL/data/BraTS2019',
+    data_path='/home/jz207/workspace/data/brats21/',
     patch_size=[96,96,96],
-    batch_size=4,
+    batch_size=8,
     workers=8,
     meta_info=BRATS19_METAINFO,
 )

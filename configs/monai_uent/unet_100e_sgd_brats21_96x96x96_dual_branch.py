@@ -27,16 +27,16 @@ model = dict(
         channels=(8, 16, 32, 64, 128),
         strides=(2, 2, 2, 2),
         num_res_units=2),
-    # decoder=dict(
-    #     type=DualBranchTanh,
-    #     # spatial_dims=3,
-    #     # out_channels=1
-    # ),
+    decoder=dict(
+        type=DualBranchTanh,
+        # spatial_dims=3,
+        # out_channels=1
+    ),
     loss_functions=[
-        dict(type=DiceLoss, to_onehot_y=False, sigmoid=True, squared_pred=True, include_background=True),
+        dict(type=DiceLoss, to_onehot_y=False, sigmoid=False, squared_pred=True, include_background=True),
         dict(type=MSELoss, steady_point=50)
-        ],
-    # data_preprocessor=dict(type=MonaiBratsPreProcessor),
+    ],
+    data_preprocessor=dict(type=MonaiBratsPreProcessor),
     infer_cfg=dict(
         inf_size=roi,
         sw_batch_size=4,    # number of sliding window batch size

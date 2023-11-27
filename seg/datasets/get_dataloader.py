@@ -318,7 +318,7 @@ def brats21_binary_loader(args, test_mode: bool, save: bool):
 
     test_transform = transforms.Compose(
         [
-            transforms.LoadImaged(keys=["image", "label"], ensure_channel_first=True),
+            transforms.LoadImaged(keys=["image", "label"], image_only=False, ensure_channel_first=True),
             # my_transforms.ConvertToMultiChannelBasedOnBrats23Classesd(keys="label"),
             transforms.NormalizeIntensityd(keys="image", nonzero=True, channel_wise=True),
             transforms.ToTensord(keys=["image", "label"]),
@@ -400,7 +400,7 @@ def brats21_loader(args, test_mode: bool, save: bool):
 
     test_transform = transforms.Compose(
         [
-            transforms.LoadImaged(keys=["image", "label"]),
+            transforms.LoadImaged(keys=["image", "label"], image_only=False),
             my_transforms.ConvertToMultiChannelBasedOnBrats23Classesd(keys="label"),
             transforms.NormalizeIntensityd(keys="image", nonzero=True, channel_wise=True),
             transforms.ToTensord(keys=["image", "label"]),
@@ -408,8 +408,8 @@ def brats21_loader(args, test_mode: bool, save: bool):
     )
 
     if test_mode:
-        validation_files = data.load_decathlon_datalist(datalist_json, True, "validation", base_dir=data_dir)
-        val_ds = MonaiDataset(meta_info=args.meta_info, data=validation_files, transform=val_transform)
+        validation_files = data.load_decathlon_datalist(datalist_json, True, "test", base_dir=data_dir)
+        val_ds = MonaiDataset(meta_info=args.meta_info, data=validation_files, transform=test_transform)
         val_sampler = Sampler(val_ds, shuffle=False) if args.distributed else None
         test_loader = data.DataLoader(
             val_ds, batch_size=1, shuffle=False, num_workers=args.workers, sampler=val_sampler, pin_memory=True

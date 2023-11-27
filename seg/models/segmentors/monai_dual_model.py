@@ -209,6 +209,9 @@ class MonaiDualSeg(BaseModel):
                 if isinstance(loss_functions, DiceLoss):
                     loss[loss_name + '_dis'] = loss_weight * loss_functions(
                         dis_mask, label)
+                    loss_functions.sigmoid = True
+                    loss[loss_name + '_seg'] = loss_weight * loss_functions(
+                        logits, label)
                 elif isinstance(loss_functions, (MSELoss, AdvMSELoss)):
                     loss[loss_name] = loss_weight * loss_functions(
                         logits, dis_mask, self.epoch)
