@@ -284,6 +284,87 @@ def KiTS23_loader(args: ConfigType, test_mode: bool, save: bool):
 
     return loader
 
+def brats21_binary_loader(args, test_mode: bool, save: bool):
+    from seg.datasets import transforms as my_transforms
+    data_dir = args.data_dir
+    datalist_json = os.path.join(data_dir, args.json_list)
+    train_transform = transforms.Compose(
+        [
+            transforms.LoadImaged(keys=["image", "label"], ensure_channel_first=True),
+            # my_transforms.ConvertToMultiChannelBasedOnBrats23Classesd(keys="label"),
+            transforms.CropForegroundd(
+                keys=["image", "label"], source_key="image", k_divisible=[args.roi_x, args.roi_y, args.roi_z]
+            ),
+            transforms.RandSpatialCropd(
+                keys=["image", "label"], roi_size=[args.roi_x, args.roi_y, args.roi_z], random_size=False
+            ),
+            transforms.RandFlipd(keys=["image", "label"], prob=0.5, spatial_axis=0),
+            transforms.RandFlipd(keys=["image", "label"], prob=0.5, spatial_axis=1),
+            transforms.RandFlipd(keys=["image", "label"], prob=0.5, spatial_axis=2),
+            transforms.NormalizeIntensityd(keys="image", nonzero=True, channel_wise=True),
+            transforms.RandScaleIntensityd(keys="image", factors=0.1, prob=1.0),
+            transforms.RandShiftIntensityd(keys="image", offsets=0.1, prob=1.0),
+            transforms.ToTensord(keys=["image", "label"]),
+        ]
+    )
+    val_transform = transforms.Compose(
+        [
+            transforms.LoadImaged(keys=["image", "label"], image_only=False, ensure_channel_first=True),
+            # my_transforms.ConvertToMultiChannelBasedOnBrats23Classesd(keys="label"),
+            transforms.NormalizeIntensityd(keys="image", nonzero=True, channel_wise=True),
+            transforms.ToTensord(keys=["image", "label"]),
+        ]
+    )
+
+    test_transform = transforms.Compose(
+        [
+            transforms.LoadImaged(keys=["image", "label"], ensure_channel_first=True),
+            # my_transforms.ConvertToMultiChannelBasedOnBrats23Classesd(keys="label"),
+            transforms.NormalizeIntensityd(keys="image", nonzero=True, channel_wise=True),
+            transforms.ToTensord(keys=["image", "label"]),
+        ]
+    )
+
+    if test_mode:
+        test_files = data.load_decathlon_datalist(datalist_json, True, "test", base_dir=data_dir)
+        test_ds = MonaiDataset(meta_info=args.meta_info, data=test_files, transform=test_transform)
+        test_sampler = Sampler(test_ds, shuffle=False) if args.distributed else None
+        test_loader = data.DataLoader(
+            val_ds, batch_size=1, shuffle=False, num_workers=args.workers, sampler=test_sampler, pin_memory=True
+        )
+
+        loader = test_loader
+    else:
+        train_files = data.load_decathlon_datalist(datalist_json, True, "training", base_dir=data_dir)
+        if args.use_normal_dataset:
+            train_ds = MonaiDataset(meta_info=args.meta_info, data=train_files, transform=train_transform)
+        else:
+            train_ds = CacheMonaiDataset(
+                meta_info=args.meta_info,
+                data=train_files,
+                transform=train_transform,
+                cache_num=args.train_case_nums,
+                cache_rate=1.0,
+                num_workers=args.workers
+            )
+        train_sampler = Sampler(train_ds) if args.distributed else None
+        train_loader = data.DataLoader(
+            train_ds,
+            batch_size=args.batch_size,
+            shuffle=(train_sampler is None),
+            num_workers=args.workers,
+            sampler=train_sampler,
+            pin_memory=True,
+        )
+        validation_files = data.load_decathlon_datalist(datalist_json, True, "validation", base_dir=data_dir)
+        val_ds = MonaiDataset(meta_info=args.meta_info, data=validation_files, transform=val_transform)
+        val_sampler = Sampler(val_ds, shuffle=False) if args.distributed else None
+        val_loader = data.DataLoader(
+            val_ds, batch_size=1, shuffle=False, num_workers=args.workers, sampler=val_sampler, pin_memory=True
+        )
+        loader = [train_loader, val_loader]
+
+    return loader
 
 def brats21_loader(args, test_mode: bool, save: bool):
     from seg.datasets import transforms as my_transforms

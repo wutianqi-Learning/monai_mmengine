@@ -17,7 +17,7 @@ from monai import data, transforms
 
 from seg.datasets.sampler import Sampler
 from seg.datasets.monai_dataset import MonaiDataset, CacheMonaiDataset
-from seg.datasets.get_dataloader import BTCV_loader, KiTS23_loader, brats21_loader, brats23_loader, brats19_loader
+from seg.datasets.get_dataloader import BTCV_loader, KiTS23_loader, brats21_loader, brats21_binary_loader, brats19_loader
 
 ConfigType = Union[Dict, Config, ConfigDict]
 ParamSchedulerType = Union[List[_ParamScheduler], Dict[str,
@@ -197,8 +197,8 @@ class MonaiRunner(Runner):
             loader = BTCV_loader(dataloader_cfg, test_mode, cfg.save)
         elif dataloader_cfg.data_name == 'BraTS21':
             loader = brats21_loader(dataloader_cfg, test_mode, cfg.save)
-        elif dataloader_cfg.data_name == 'BraTS23':
-            loader = brats23_loader(dataloader_cfg, test_mode, cfg.save)
+        elif dataloader_cfg.data_name == 'BraTS21_binary':
+            loader = brats21_binary_loader(dataloader_cfg, test_mode, cfg.save)
         elif dataloader_cfg.data_name == 'BraTS19':
             loader = brats19_loader(dataloader_cfg, test_mode, cfg.save)
         else:
