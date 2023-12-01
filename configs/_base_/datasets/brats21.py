@@ -6,7 +6,7 @@ roi = [96, 96, 96]
 dataloader_cfg = dict(
     data_name='BraTS21',
     data_dir='/home/jz207/workspace/data/brats21/',
-    json_list='dataset_2.json',
+    json_list='dataset_0.json',
     train_case_nums=1000,
     meta_info=BRATS21_METAINFO,
     # use monai Dataset class

@@ -67,7 +67,7 @@ class MonaiSegmentor(BaseModule):
         if self.decoder is not None:
             x = self.decoder(x)
         if isinstance(x, Sequence) and predict:
-            x = x[0]
+            x = x[1]
         #     else:
         #         new_x = []
         #         for x_i in x:
@@ -191,7 +191,8 @@ class MonaiDualSeg(BaseModel):
 
     def loss_by_feat(self, dual_logits: Tensor, label: Tensor) -> dict:
         loss = dict()
-        logits, dis  = dual_logits
+        dis, logits  = dual_logits
+        # dis_mask = torch.softmax(-1500 * dis, dim=1)
         dis_mask = torch.sigmoid(-1500 * dis)
         if not isinstance(self.loss_functions, nn.ModuleList):
             loss_functions = [self.loss_functions]
@@ -209,9 +210,9 @@ class MonaiDualSeg(BaseModel):
                 if isinstance(loss_functions, DiceLoss):
                     loss[loss_name + '_dis'] = loss_weight * loss_functions(
                         dis_mask, label)
-                    loss_functions.sigmoid = True
-                    loss[loss_name + '_seg'] = loss_weight * loss_functions(
-                        logits, label)
+                    # loss_functions.sigmoid = True
+                    # loss[loss_name + '_seg'] = loss_weight * loss_functions(
+                    #     logits, label)
                 elif isinstance(loss_functions, (MSELoss, AdvMSELoss)):
                     loss[loss_name] = loss_weight * loss_functions(
                         logits, dis_mask, self.epoch)

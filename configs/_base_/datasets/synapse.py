@@ -5,7 +5,7 @@ roi = [96, 96, 96]
 
 dataloader_cfg = dict(
     data_name='BTCV',
-    data_dir='data/synapse_raw',
+    data_dir='/home/jz207/workspace/data/synapse_raw',
     json_list='dataset_0.json',
     train_case_nums=24,
     meta_info=SYNAPSE_METAINFO,

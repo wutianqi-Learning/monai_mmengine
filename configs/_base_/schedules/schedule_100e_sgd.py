@@ -8,7 +8,7 @@ from seg.engine.hooks.logger_hook import MyLoggerHook
 from mmengine.runner.loops import EpochBasedTrainLoop
 from seg.engine.runner.monai_loops import MonaiValLoop, MonaiTestLoop
 
-train_cfg = dict(type=EpochBasedTrainLoop, max_epochs=100, val_interval=4)
+train_cfg = dict(type=EpochBasedTrainLoop, max_epochs=100, val_interval=1)
 val_cfg = dict(type=MonaiValLoop)
 test_cfg = dict(type=MonaiTestLoop)
 # optimizer

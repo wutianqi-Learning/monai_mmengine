@@ -11,7 +11,7 @@
             "program": "train.py",
             "console": "integratedTerminal",
             "justMyCode": true,
-            "args": ["configs/vnet/unetmod_tiny_d8_200e_sgd_brats19_96x96x96_dual_branch.py"]
+            "args": ["configs/monai_uent/unet_100e_adamw_brats21Binary_96x96x96.py"]
         }
     ]
 }

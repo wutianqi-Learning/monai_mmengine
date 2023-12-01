@@ -17,7 +17,7 @@ from mmseg.utils import (ForwardResults, ConfigType, OptConfigType, OptMultiConf
                          OptSampleList, SampleList, add_prefix)
 from mmseg.models.utils import resize
 from typing import Dict, Optional, Tuple, Union, Sequence
-
+from ..losses.my_monai_dice import MyDiceCELoss
 from monai.inferers import sliding_window_inference
 from monai.losses import DeepSupervisionLoss
 

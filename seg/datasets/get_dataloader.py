@@ -450,7 +450,7 @@ def brats21_loader(args, test_mode: bool, save: bool):
 
 
 def brats19_loader(args, test_mode: bool, save: bool):
-    from .brats2019 import (BraTS2019, CenterCrop, RandomCrop,
+    from .brats21 import (BraTS2019, CenterCrop, RandomCrop,
                                    RandomRotFlip, ToTensor,
                                    TwoStreamBatchSampler)
     db_train = BraTS2019(base_dir=args.data_path,

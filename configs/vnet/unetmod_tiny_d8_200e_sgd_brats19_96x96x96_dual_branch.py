@@ -22,11 +22,6 @@ model = dict(
         spatial_dims=3,
         in_channels=1,
         out_channels=1),
-    decoder=dict(
-        type=DualBranchTanh,
-        # spatial_dims=3,
-        # out_channels=1
-    ),
     loss_functions=[
         dict(type=MyDiceCELoss, to_onehot_y=False, sigmoid=True, squared_pred=True, include_background=True),
         dict(type=DiceLoss, to_onehot_y=False, sigmoid=False, squared_pred=True, include_background=True),
